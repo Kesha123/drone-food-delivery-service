@@ -1,7 +1,11 @@
 package com.fleet;
 
+import com.fleet.drone.Drone;
+import com.fleet.drone.DroneRepository;
 import com.fleet.flight.FoodOrderRepository;
 import com.fleet.flight.FoodOrder;
+import org.apache.camel.ProducerTemplate;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +20,21 @@ public class FlightController {
     @Autowired
     FoodOrderRepository foodOrderRepository;
 
+    @Autowired
+    DroneRepository droneRepository;
+
+    @Autowired
+    private ProducerTemplate producerTemplate;
+
+    @Autowired
+    private AmqpTemplate amqpTemplate;
+
     @PostMapping("/flights")
     public ResponseEntity<FoodOrder> createFoodOrder(@RequestBody FoodOrder data) {
         try {
             FoodOrder foodOrder = foodOrderRepository.save(data);
+            amqpTemplate.convertAndSend("orders", foodOrder.toString());
+            // producerTemplate.sendBody("direct:registerRoute", foodOrder);
             return new ResponseEntity<>(data, HttpStatus.CREATED);
         } catch ( Exception e) {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);

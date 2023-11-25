@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface DroneRepository extends MongoRepository<Drone, String> {
     Optional<Drone> findByNickname(String nickname);
+    Optional<Drone> findByAvailable(Boolean available);
 }

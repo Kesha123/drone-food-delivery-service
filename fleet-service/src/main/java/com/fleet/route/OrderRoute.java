@@ -1,20 +1,23 @@
 package com.fleet.route;
 
-// import com.fleet.FleetService;
-// import com.fleet.FoodOrder;
+
+import com.fleet.drone.Drone;
+import com.fleet.drone.DroneRepository;
+import com.fleet.flight.FoodOrder;
+import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-        import org.springframework.stereotype.Component;
+import org.apache.camel.component.http.HttpMethods;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class OrderRoute extends RouteBuilder {
-    @Override
-    public void configure() throws Exception {
 
-    }
-
-    /*
     @Autowired
-    private FleetService fleetService;
+    DroneRepository droneRepository;
 
     @Override
     public void configure() throws Exception {
@@ -24,11 +27,15 @@ public class OrderRoute extends RouteBuilder {
         from("direct:registerRoute")
                 .routeId("food-order-create")
                 .process(exchange -> {
-                    Order order = exchange.getIn().getBody(Order.class);
-                    Drone associatedDrone = order.getDrone();
-                    String endpointUrl = String.format("http://%s/drone/food-order", associatedDrone.getHost());
-                    exchange.getIn().setHeader(Exchange.HTTP_URI, endpointUrl);
-                    exchange.getIn().setBody(order.getFoodOrder(), FoodOrder.class);
+                    FoodOrder order = exchange.getIn().getBody(FoodOrder.class);
+                    Optional<Drone> associatedDrone = droneRepository.findById(order.getDrone());
+                    if (associatedDrone.isPresent()) {
+                        String endpointUrl = String.format("http://%s/drone/food-order", associatedDrone.get().getHost());
+                        exchange.getIn().setHeader(Exchange.HTTP_URI, endpointUrl);
+                        exchange.getIn().setBody(order.getFoodOrder(), FoodOrder.class);
+                    } else {
+
+                    }
                 })
                 .marshal().json()
                 .setHeader(Exchange.HTTP_METHOD, HttpMethods.POST)
@@ -37,5 +44,4 @@ public class OrderRoute extends RouteBuilder {
                 .log("Order is assigned to the drone");
     }
 
-     */
 }

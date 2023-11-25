@@ -12,11 +12,14 @@ public class FoodOrder {
     private String restaurantLocation;
     private String customerLocation;
 
-    public FoodOrder(OrderStatus status, String drone, String restaurantLocation, String customerLocation) {
-        this.status = status;
-        this.drone = drone;
+    private String foodOrder;
+
+    public FoodOrder(String restaurantLocation, String customerLocation, String foodOrder) {
+        this.status = OrderStatus.CREATED;
+        this.drone = null;
         this.restaurantLocation = restaurantLocation;
         this.customerLocation = customerLocation;
+        this.foodOrder = foodOrder;
     }
 
     public String getId() {
@@ -61,12 +64,20 @@ public class FoodOrder {
 
     @Override
     public String toString() {
-        return "FoodOrder{" +
-                "id='" + id + '\'' +
-                ", status=" + status +
-                ", drone='" + drone + '\'' +
-                ", restaurantLocation='" + restaurantLocation + '\'' +
-                ", customerLocation='" + customerLocation + '\'' +
+        return "{" +
+                "\"id\":\"" + id + '\"' +
+                ", \"status\":\"" + status + '\"' +
+                ", \"drone\":\"" + drone + '\"' +
+                ", \"restaurantLocation\":\"" + restaurantLocation + '\"' +
+                ", \"customerLocation\":\"" + customerLocation + '\"' +
                 '}';
+    }
+
+    public String getFoodOrder() {
+        return foodOrder;
+    }
+
+    public void setFoodOrder(String foodOrder) {
+        this.foodOrder = foodOrder;
     }
 }

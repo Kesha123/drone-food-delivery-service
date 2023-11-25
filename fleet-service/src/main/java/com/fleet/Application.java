@@ -15,25 +15,15 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
+	/*
 	@Bean
 	CommandLineRunner runner(DroneRepository repository, MongoTemplate mongoTemplate) {
 		return args -> {
 			Drone drone = new Drone(
 					"innokentii",
-					1.0,
-					"localhost:8081"
+					"localhost:8081",
+					""
 			);
-
-			/*
-			Query query = new Query();
-			query.addCriteria(Criteria.where("nickname").is("innokentii"));
-			List<Drone> drones = mongoTemplate.find(query, Drone.class);
-			if (drones.size() > 1) throw new IllegalStateException();
-			if (drones.isEmpty()) {
-				repository.save(drone);
-			}
-
-			 */
 
 			repository.findByNickname("innokentii")
 					.ifPresentOrElse(d -> {
@@ -43,4 +33,5 @@ public class Application {
 					});
 		};
 	}
+	*/
 }

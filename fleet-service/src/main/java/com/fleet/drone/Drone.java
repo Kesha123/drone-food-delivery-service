@@ -13,19 +13,19 @@ public class Drone {
     private String id;
     @Indexed(unique = true)
     private String nickname;
-    private Double capacity;
     private int chargeLevel;
 
     private boolean available;
 
     private String host;
+    private String location;
 
-    public Drone(String nickname, Double capacity, String host) {
+    public Drone(String nickname, String host, String location) {
         this.nickname = nickname;
-        this.capacity = capacity;
         this.chargeLevel = 100;
         this.available = true;
         this.host = host;
+        this.location = location;
     }
 
     public String getId() {
@@ -42,14 +42,6 @@ public class Drone {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public Double getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(Double capacity) {
-        this.capacity = capacity;
     }
 
     public int getChargeLevel() {
@@ -76,18 +68,23 @@ public class Drone {
         this.host = host;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "id='" + id + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", capacity=" + capacity +
                 ", chargeLevel=" + chargeLevel +
                 ", available=" + available +
                 ", host=" + host +
                 '}';
     }
-
-
 
 }

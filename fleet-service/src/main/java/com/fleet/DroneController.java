@@ -43,6 +43,8 @@ public class DroneController {
             Drone drone = droneData.get();
             drone.setNickname(data.getNickname());
             drone.setHost(data.getHost());
+            drone.setChargeLevel(data.getChargeLevel());
+            drone.setLocation(data.getLocation());
             return new ResponseEntity<>(droneRepository.save(drone), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
