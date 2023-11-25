@@ -1,22 +1,18 @@
 package com.fleet.route;
 
-import com.fleet.Drone;
-import com.fleet.FleetService;
-import com.fleet.FoodOrder;
-import com.fleet.Order;
-import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
+// import com.fleet.FleetService;
+// import com.fleet.FoodOrder;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.http.HttpMethods;
-import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.Map;
+        import org.springframework.stereotype.Component;
 
 @Component
 public class OrderRoute extends RouteBuilder {
+    @Override
+    public void configure() throws Exception {
 
+    }
+
+    /*
     @Autowired
     private FleetService fleetService;
 
@@ -40,4 +36,6 @@ public class OrderRoute extends RouteBuilder {
                 .to("http://dummy")
                 .log("Order is assigned to the drone");
     }
+
+     */
 }

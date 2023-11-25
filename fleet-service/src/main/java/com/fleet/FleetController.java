@@ -1,7 +1,7 @@
 package com.fleet;
 
-import com.fleet.responses.DroneInteraction;
-import com.fleet.responses.StatusCode;
+// import com.fleet.responses.DroneInteraction;
+// import com.fleet.responses.StatusCode;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import java.util.Map;
 @RestController
 public class FleetController {
 
+    /*
     @Autowired
     private FleetService fleetService;
 
@@ -65,4 +66,5 @@ public class FleetController {
     public ResponseEntity<Drone> infoServiceIndividual(@PathVariable int id) {
         return new ResponseEntity<>(fleetService.getFleet().get(id), HttpStatus.OK);
     }
+    */
 }

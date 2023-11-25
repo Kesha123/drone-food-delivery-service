@@ -1,36 +1,39 @@
-package com.fleet;
+package com.fleet.drone;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.lang.reflect.Field;
 
+@Document
 public class Drone {
 
-    private static int countDrone;
-    private int identifier;
+    @Id
+    private String id;
+    @Indexed(unique = true)
     private String nickname;
     private Double capacity;
     private int chargeLevel;
 
     private boolean available;
 
-    private String host = "localhost:8080";
+    private String host;
 
     public Drone(String nickname, Double capacity, String host) {
-        this.identifier = countDrone;
         this.nickname = nickname;
         this.capacity = capacity;
         this.chargeLevel = 100;
         this.available = true;
         this.host = host;
-        countDrone++;
     }
 
-
-    public int getIdentifier() {
-        return identifier;
+    public String getId() {
+        return id;
     }
 
-    public void setIdentifier(int identifier) {
-        this.identifier = identifier;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNickname() {
@@ -76,7 +79,7 @@ public class Drone {
     @Override
     public String toString() {
         return "{" +
-                "identifier='" + identifier + '\'' +
+                "id='" + id + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", capacity=" + capacity +
                 ", chargeLevel=" + chargeLevel +
@@ -84,6 +87,7 @@ public class Drone {
                 ", host=" + host +
                 '}';
     }
+
 
 
 }
