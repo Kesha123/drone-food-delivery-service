@@ -4,12 +4,18 @@ import com.fleet.drone.Drone;
 import com.fleet.drone.DroneRepository;
 import com.fleet.flight.FoodOrderRepository;
 import com.fleet.flight.FoodOrder;
+import com.fleet.flight.FoodOrderService;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageProperties;
 
 import java.util.Optional;
 
@@ -21,20 +27,17 @@ public class FlightController {
     FoodOrderRepository foodOrderRepository;
 
     @Autowired
-    DroneRepository droneRepository;
-
-    @Autowired
     private ProducerTemplate producerTemplate;
 
     @Autowired
-    private AmqpTemplate amqpTemplate;
+    private FoodOrderService foodOrderService;
 
     @PostMapping("/flights")
     public ResponseEntity<FoodOrder> createFoodOrder(@RequestBody FoodOrder data) {
         try {
             FoodOrder foodOrder = foodOrderRepository.save(data);
-            amqpTemplate.convertAndSend("orders", foodOrder.toString());
             // producerTemplate.sendBody("direct:registerRoute", foodOrder);
+            foodOrderService.createOrder(foodOrder);
             return new ResponseEntity<>(data, HttpStatus.CREATED);
         } catch ( Exception e) {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
@@ -56,9 +59,7 @@ public class FlightController {
         Optional<FoodOrder> foodOrderData = foodOrderRepository.findById(foodOrderId);
         if (foodOrderData.isPresent()) {
             FoodOrder foodOrder = foodOrderData.get();
-            foodOrder.setDrone(data.getDrone());
-            foodOrder.setRestaurantLocation(data.getRestaurantLocation());
-            foodOrder.setCustomerLocation(data.getCustomerLocation());
+            foodOrder.setStatus(data.getStatus());
             return new ResponseEntity<>(foodOrderRepository.save(foodOrder), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

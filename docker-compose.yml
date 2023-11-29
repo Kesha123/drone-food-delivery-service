@@ -12,7 +12,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
-      - mongo-data:/data/db
+      - ./mongo-data:/data/db
 
   rabbitmq:
     image: rabbitmq:management
@@ -24,6 +24,38 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: root
       RABBITMQ_DEFAULT_PASS: root
+
+  pizzeria-web-client:
+    build:
+      context: ./pizzeria-web-client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    container_name:  pizzeria_web_client
+
+  operating-web-client:
+    build:
+      context: ./operating-web-client
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    container_name:  operating_web_client
+
+  pizza-store:
+    image: node:latest
+    container_name:  pizza_store
+
+  fleet:
+    image: node:latest
+    container_name:  fleet_server
+
+  drone-1:
+    image: node:latest
+    container_name:  drone_1
+
+  drone-2:
+    image: node:latest
+    container_name:  drone_2
 
 volumes:
   mongo-data:

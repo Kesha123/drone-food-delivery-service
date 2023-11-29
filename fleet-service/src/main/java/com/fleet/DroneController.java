@@ -2,6 +2,7 @@ package com.fleet;
 
 import com.fleet.drone.Drone;
 import com.fleet.drone.DroneRepository;
+import com.fleet.flight.FoodOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ public class DroneController {
 
     @Autowired
     DroneRepository droneRepository;
+
+    @Autowired
+    FoodOrderService foodOrderService;
 
     @PostMapping("/drones")
     public ResponseEntity<Drone> createDrone(@RequestBody Drone data) {
@@ -41,11 +45,14 @@ public class DroneController {
         Optional<Drone> droneData = droneRepository.findById(droneId);
         if (droneData.isPresent()) {
             Drone drone = droneData.get();
-            drone.setNickname(data.getNickname());
-            drone.setHost(data.getHost());
+            drone.setNickname(data.getNickname() != null ? data.getNickname() : drone.getNickname());
+            drone.setHost(data.getHost() != null ? data.getHost() : drone.getHost());
             drone.setChargeLevel(data.getChargeLevel());
             drone.setLocation(data.getLocation());
-            return new ResponseEntity<>(droneRepository.save(drone), HttpStatus.OK);
+            drone.setAvailable(data.isAvailable());
+            droneRepository.save(drone);
+            if (drone.isAvailable()) foodOrderService.createOrder(drone);
+            return new ResponseEntity<>(drone, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

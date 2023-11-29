@@ -19,6 +19,7 @@ public class Drone {
 
     private String host;
     private String location;
+    private String order;
 
     public Drone(String nickname, String host, String location) {
         this.nickname = nickname;
@@ -26,6 +27,7 @@ public class Drone {
         this.available = true;
         this.host = host;
         this.location = location;
+        this.order = null;
     }
 
     public String getId() {
@@ -74,6 +76,14 @@ public class Drone {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
     }
 
     @Override
