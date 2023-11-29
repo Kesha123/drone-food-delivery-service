@@ -1,35 +1,51 @@
 package com.drone;
 
-
-import org.apache.camel.ProducerTemplate;
+import com.drone.drone.Drone;
+import com.drone.drone.DroneService;
+import com.drone.order.FoodOrder;
+import com.drone.order.FoodOrderService;
+import com.drone.order.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 public class DroneController {
+    @Autowired
+    DroneService droneService;
 
     @Autowired
-    private DroneService droneService;
+    FoodOrderService foodOrderService;
 
-    @Autowired
-    private ProducerTemplate producerTemplate;
-
-    @PostMapping("/drone/drone-register")
-    public ResponseEntity<Drone> registerService (@RequestBody Drone data) {
-        producerTemplate.sendBody("direct:registerRoute", data);
-        return new ResponseEntity<>(droneService.getDrone(), HttpStatus.OK);
+    @PostMapping("/drone/register")
+    public ResponseEntity<Drone> createDrone(@RequestBody Drone data) {
+        try {
+            droneService.setDrone(data);
+            return new ResponseEntity<>(data, HttpStatus.CREATED);
+        } catch ( Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        }
     }
 
-    @RequestMapping(value = "/drone/drone-info", method = RequestMethod.GET)
-    public ResponseEntity<Drone> infoService() {
-        return new ResponseEntity<>(droneService.getDrone(), HttpStatus.OK);
+    @GetMapping("/drone/portal")
+    public String index() {
+        if (droneService.getFoodOrder() != null) return "index";
+        else return "delivery";
     }
 
-    @PostMapping("/drone/food-order")
-    public ResponseEntity<String> foodOrderService (@RequestBody FoodOrder foodOrder) {
-        droneService.getDrone().setAvailable(false);
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+    @PostMapping("/drone/start-delivery")
+    public String startDelivery() {
+        try {
+            FoodOrder order = droneService.getFoodOrder();
+            order.setStatus(OrderStatus.DELIVERING);
+            droneService.setFoodOrder(order);
+            foodOrderService.startDelivery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "delivery";
     }
+
 }

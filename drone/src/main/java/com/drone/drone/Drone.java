@@ -1,23 +1,14 @@
-package com.fleet.drone;
+package com.drone.drone;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.lang.reflect.Field;
-
-@Document
 public class Drone {
 
-    @Id
     private String id;
-    @Indexed(unique = true)
+
     private String nickname;
     private int chargeLevel;
 
     private boolean available;
 
-    @Indexed(unique = true)
     private String host;
     private String location;
     private String order;
@@ -87,15 +78,17 @@ public class Drone {
         this.order = order;
     }
 
+
     @Override
     public String toString() {
-        return "{" +
+        return "Drone{" +
                 "id='" + id + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", chargeLevel=" + chargeLevel +
                 ", available=" + available +
-                ", host=" + host +
+                ", host='" + host + '\'' +
+                ", location='" + location + '\'' +
+                ", order='" + order + '\'' +
                 '}';
     }
-
 }

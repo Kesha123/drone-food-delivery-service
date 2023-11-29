@@ -30,18 +30,15 @@ public class FlightController {
     @Autowired
     private FoodOrderService foodOrderService;
 
-    private final RabbitTemplate rabbitTemplate;
-
-    public FlightController(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
-    }
+    @Autowired
+    private ProducerTemplate producerTemplate;
 
     @PostMapping("/flights")
     public ResponseEntity<FoodOrder> createFoodOrder(@RequestBody FoodOrder data) {
         try {
             data.setStatus(OrderStatus.CREATED);
             FoodOrder foodOrder = foodOrderRepository.save(data);
-            rabbitTemplate.convertAndSend("", "q.order-registration", foodOrder.toString());
+            foodOrderService.createOrder(foodOrder);
             return new ResponseEntity<>(foodOrder, HttpStatus.CREATED);
         } catch ( Exception e) {
             e.printStackTrace();

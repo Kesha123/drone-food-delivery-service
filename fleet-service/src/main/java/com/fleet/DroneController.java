@@ -3,6 +3,7 @@ package com.fleet;
 import com.fleet.drone.Drone;
 import com.fleet.drone.DroneRepository;
 import com.fleet.flight.FoodOrderService;
+import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,17 @@ public class DroneController {
     @Autowired
     DroneRepository droneRepository;
 
+
+    @Autowired
+    private ProducerTemplate producerTemplate;
+
+
     @PostMapping("/drones")
     public ResponseEntity<Drone> createDrone(@RequestBody Drone data) {
         try {
             Drone drone = droneRepository.save(data);
-            return new ResponseEntity<>(data, HttpStatus.CREATED);
+            producerTemplate.sendBody("direct:registerRoute", drone);
+            return new ResponseEntity<>(drone, HttpStatus.CREATED);
         } catch ( Exception e) {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fleet.drone.Drone;
 import com.fleet.drone.DroneRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -23,12 +24,18 @@ public class FoodOrderService {
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
 
+    private final RabbitTemplate rabbitTemplate;
+
+    public FoodOrderService(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
     public void createOrder(FoodOrder order) {
         Sort sort = Sort.by(Sort.Direction.DESC, "chargeLevel");
         Optional<List<Drone>> droneData = droneRepository.findByAvailable(true, sort);
-        if (droneData.isPresent()) {
+        if (droneData.isPresent() & !droneData.get().isEmpty()) {
             Drone drone = droneData.get().get(0);
-            this.configureOrderInDatabase(drone, order);
+            this.configureOrder(drone, order);
         } else {
             order.setStatus(OrderStatus.WAITING);
             foodOrderRepository.save(order);
@@ -40,7 +47,7 @@ public class FoodOrderService {
         Optional<List<FoodOrder>> ordersData = foodOrderRepository.findByStatus(OrderStatus.WAITING, sort);
         if (!ordersData.isPresent()) return;
         FoodOrder order = ordersData.get().get(0);
-        this.configureOrderInDatabase(drone, order);
+        this.configureOrder(drone, order);
     }
 
     public FoodOrder convertJsonToObject(String serializedOrder) {
@@ -51,11 +58,12 @@ public class FoodOrderService {
         }
     }
 
-    private void configureOrderInDatabase(Drone drone, FoodOrder order) {
+    private void configureOrder(Drone drone, FoodOrder order) {
         order.setDrone(drone.getId());
         order.setStatus(OrderStatus.CREATED);
         drone.setOrder(order.getId());
         drone.setAvailable(false);
+        rabbitTemplate.convertAndSend("", "q.order-registration", order.toString());
         foodOrderRepository.save(order);
         droneRepository.save(drone);
     }
