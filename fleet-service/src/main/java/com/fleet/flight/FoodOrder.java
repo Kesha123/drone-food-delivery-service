@@ -1,20 +1,11 @@
 package com.fleet.flight;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.config.StateMachineBuilder;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.EnumSet;
 
 @Document
 public class FoodOrder {
@@ -31,42 +22,12 @@ public class FoodOrder {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createdAt;
 
-    @Version
-    private Integer version;
-
-    @Autowired
-    private StateMachine<OrderStatus, OrderStatus> stateMachine;
 
     public FoodOrder(String restaurantLocation, String customerLocation, String foodOrder) throws Exception {
         this.drone = null;
         this.restaurantLocation = restaurantLocation;
         this.customerLocation = customerLocation;
         this.foodOrder = foodOrder;
-
-        stateMachine = StateMachineBuilder.builder()
-                .configureStates()
-                .withStates()
-                .initial(OrderStatus.WAITING)
-                .states(Collections.singleton(EnumSet.allOf(OrderStatus.class).clone()))
-                .and()
-                .getClass()
-                .withExternal()
-                .source(OrderStatus.WAITING).target(OrderStatus.CREATED)
-                .and()
-                .withExternal()
-                .source(OrderStatus.CREATED).target(OrderStatus.COOKING)
-                .and()
-                .withExternal()
-                .source(OrderStatus.COOKING).target(OrderStatus.DELIVERING)
-                .and()
-                .withExternal()
-                .source(OrderStatus.DELIVERING).target(OrderStatus.DELIVERED)
-                .and()
-                .build();
-
-        // Set the initial state
-        stateMachine.start();
-        status = stateMachine.getState().getId();
     }
 
     public String getId() {
@@ -82,7 +43,6 @@ public class FoodOrder {
     }
 
     public void setStatus(OrderStatus status) {
-        stateMachine.sendEvent(status);
         this.status = status;
     }
     public String getDrone() {
@@ -124,13 +84,14 @@ public class FoodOrder {
     @Override
     public String toString() {
         return "{" +
-                "\"id\":\"" + id + '\"' +
-                ", \"status\":\"" + status + '\"' +
-                ", \"drone\":\"" + drone + '\"' +
-                ", \"restaurantLocation\":\"" + restaurantLocation + '\"' +
-                ", \"customerLocation\":\"" + customerLocation + '\"' +
-                '}';
+                "\"id\":\"" + id + "\"," +
+                "\"status\":\"" + status + "\"," +
+                "\"drone\":\"" + drone + "\"," +
+                "\"restaurantLocation\":\"" + restaurantLocation + "\"," +
+                "\"customerLocation\":\"" + customerLocation + "\"," +
+                "\"foodOrder\":\"" + foodOrder + "\"," +
+                "\"createdAt\":\"" + createdAt + "\"" +
+                "}";
     }
-
 
 }

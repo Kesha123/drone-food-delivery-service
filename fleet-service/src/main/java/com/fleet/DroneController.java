@@ -17,9 +17,6 @@ public class DroneController {
     @Autowired
     DroneRepository droneRepository;
 
-    @Autowired
-    FoodOrderService foodOrderService;
-
     @PostMapping("/drones")
     public ResponseEntity<Drone> createDrone(@RequestBody Drone data) {
         try {
@@ -51,7 +48,6 @@ public class DroneController {
             drone.setLocation(data.getLocation());
             drone.setAvailable(data.isAvailable());
             droneRepository.save(drone);
-            if (drone.isAvailable()) foodOrderService.createOrder(drone);
             return new ResponseEntity<>(drone, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

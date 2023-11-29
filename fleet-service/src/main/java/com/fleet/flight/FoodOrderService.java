@@ -43,7 +43,7 @@ public class FoodOrderService {
         this.configureOrderInDatabase(drone, order);
     }
 
-    private FoodOrder convertJsonToObject(String serializedOrder) {
+    public FoodOrder convertJsonToObject(String serializedOrder) {
         try {
             return objectMapper.readValue(serializedOrder, FoodOrder.class);
         } catch (JsonProcessingException e) {

@@ -5,6 +5,7 @@ import com.fleet.drone.DroneRepository;
 import com.fleet.flight.FoodOrderRepository;
 import com.fleet.flight.FoodOrder;
 import com.fleet.flight.FoodOrderService;
+import com.fleet.flight.OrderStatus;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -27,19 +28,23 @@ public class FlightController {
     FoodOrderRepository foodOrderRepository;
 
     @Autowired
-    private ProducerTemplate producerTemplate;
-
-    @Autowired
     private FoodOrderService foodOrderService;
+
+    private final RabbitTemplate rabbitTemplate;
+
+    public FlightController(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     @PostMapping("/flights")
     public ResponseEntity<FoodOrder> createFoodOrder(@RequestBody FoodOrder data) {
         try {
+            data.setStatus(OrderStatus.CREATED);
             FoodOrder foodOrder = foodOrderRepository.save(data);
-            // producerTemplate.sendBody("direct:registerRoute", foodOrder);
-            foodOrderService.createOrder(foodOrder);
-            return new ResponseEntity<>(data, HttpStatus.CREATED);
+            rabbitTemplate.convertAndSend("", "q.order-registration", foodOrder.toString());
+            return new ResponseEntity<>(foodOrder, HttpStatus.CREATED);
         } catch ( Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
     }
