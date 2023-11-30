@@ -1,28 +1,33 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, UsePipes, ValidationPipe, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { SerializedUser, User } from './entities/user.entity';
 
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
+  @UsePipes(ValidationPipe)
   @Post('/create')
-  createProfile(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async createProfile(@Body() createUserDto: CreateUserDto): Promise<User | undefined> {
+    const user = await this.userService.create(createUserDto);
+    return user;
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  getProfile(@Param('id') id: string) {
-    return this.userService.findOne(id);
+  async getProfile(@Param('id') id: string): Promise<SerializedUser | undefined> {
+    const user = await this.userService.findOne(id);
+    return new SerializedUser(user);
   }
-
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  deleteProfile(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async deleteProfile(@Param('id') id: string): Promise<void> {
+    await this.userService.remove(+id);
   }
 }

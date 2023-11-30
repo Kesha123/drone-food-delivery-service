@@ -1,8 +1,8 @@
-import { ClassSerializerInterceptor, Injectable, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { IUserModel } from 'src/db/model/User.model';
-import { SerializedUser, User } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { encodePassword } from '../utils/bcrypt';
 
 
@@ -13,7 +13,7 @@ export class UserService {
     @InjectModel('User') private userModel: IUserModel
   ) {}
 
-  @UsePipes(ValidationPipe)
+
   async create(createUserDto: CreateUserDto): Promise<User | undefined> {
     const encryptedPassword = await encodePassword(createUserDto.password);
     const newUser = await this.userModel.create({
@@ -28,11 +28,9 @@ export class UserService {
     return user;
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
-  async findOne(id: string): Promise<any | undefined> {
+  async findOne(id: string): Promise<User | undefined> {
     let user = await this.userModel.findById(id).lean();
-    const { password, ...rest } = user
-    return rest;
+    return user;
   }
 
   async remove(id: number): Promise<void | undefined> {

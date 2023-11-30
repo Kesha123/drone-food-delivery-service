@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @Document
 public class FoodOrder {
@@ -16,14 +17,14 @@ public class FoodOrder {
     private String restaurantLocation;
     private String customerLocation;
 
-    private String foodOrder;
+    private String[] foodOrder;
 
     @CreatedDate
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createdAt;
 
 
-    public FoodOrder(String restaurantLocation, String customerLocation, String foodOrder) throws Exception {
+    public FoodOrder(String restaurantLocation, String customerLocation, String[] foodOrder) throws Exception {
         this.drone = null;
         this.restaurantLocation = restaurantLocation;
         this.customerLocation = customerLocation;
@@ -69,11 +70,11 @@ public class FoodOrder {
         this.customerLocation = customerLocation;
     }
 
-    public String getFoodOrder() {
+    public String[] getFoodOrder() {
         return foodOrder;
     }
 
-    public void setFoodOrder(String foodOrder) {
+    public void setFoodOrder(String[] foodOrder) {
         this.foodOrder = foodOrder;
     }
 
@@ -89,7 +90,7 @@ public class FoodOrder {
                 "\"drone\":\"" + drone + "\"," +
                 "\"restaurantLocation\":\"" + restaurantLocation + "\"," +
                 "\"customerLocation\":\"" + customerLocation + "\"," +
-                "\"foodOrder\":\"" + foodOrder + "\"," +
+                "\"foodOrder\":\"" + Arrays.toString(foodOrder) + "\"," +
                 "\"createdAt\":\"" + createdAt + "\"" +
                 "}";
     }
