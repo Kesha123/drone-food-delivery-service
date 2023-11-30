@@ -2,6 +2,7 @@ package com.fleet;
 
 import com.fleet.drone.Drone;
 import com.fleet.drone.DroneRepository;
+import com.fleet.flight.FoodOrderRepository;
 import com.fleet.flight.FoodOrderService;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class DroneController {
 
     @Autowired
     DroneRepository droneRepository;
+
+    @Autowired
+    FoodOrderRepository foodOrderRepository;
 
 
     @Autowired
@@ -49,6 +53,9 @@ public class DroneController {
         Optional<Drone> droneData = droneRepository.findById(droneId);
         if (droneData.isPresent()) {
             Drone drone = droneData.get();
+            if (!drone.isAvailable() & data.isAvailable()) {
+
+            }
             drone.setNickname(data.getNickname() != null ? data.getNickname() : drone.getNickname());
             drone.setHost(data.getHost() != null ? data.getHost() : drone.getHost());
             drone.setChargeLevel(data.getChargeLevel());
