@@ -1,24 +1,23 @@
-import got from 'got';
+// import got from 'got';
 import { Flight } from "./types";
 import { env } from '../config/env';
 import { CreateOrderDto } from '../order/dto/create-order.dto';
-import { applicationLogger } from 'src/config/logger';
+import { applicationLogger } from '../config/logger';
+import { Order } from "../order/entities/order.entity";
 
 
-const postFlightToFleet = async (flight: Flight): Promise<void> => {
+export const postFlightToFleet = async (flight: Flight): Promise<Order> => {
     try {
         const options = {
             headers: {
               ...{"Content-Type": "application/json"},
             },
-            json: flight,
+            body: JSON.stringify(flight),
+            method: "POST"
         };
-        const response = await got
-            .post(`${env.FLEET_SERVICE}/flights`, options)
-            // .json<CreateOrderDto>();
-
-        console.log(response)
-        // return response
+        const response = await fetch(`${env.FLEET_SERVICE}/flights`, options);
+        const data = await response.json();
+        return data;
     } catch (e: any) {
         applicationLogger().error(e);
     }

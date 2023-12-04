@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IOrderModel } from '../db/model/Order.model';
-import { Order } from './entities/order.entity';
+import { FleetServiceOrder, Order, OrderStatus } from './entities/order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { postFlightToFleet } from 'src/services/fleet.service';
+import { env } from '../config/env';
 
 @Injectable()
 export class OrderService {
@@ -20,8 +22,21 @@ export class OrderService {
         return order;
     }
 
-    async createOrder(createOrderDto: CreateOrderDto): Promise<Order | undefined> {
-        const order = await this.orderModel.create(createOrderDto);
+    async createOrder(createOrderDto: CreateOrderDto, customerId: string): Promise<Order | undefined> {
+        const newOrder: Order = {
+            ...createOrderDto,
+            status: OrderStatus.Waiting,
+            drone: '',
+            customer: customerId,
+        }
+
+        const fleetServiceFlight = await postFlightToFleet(newOrder);
+
+        newOrder.drone = fleetServiceFlight.drone;
+        newOrder.status = fleetServiceFlight.status;
+
+        const order = await this.orderModel.create(newOrder);
+
         return order;
     }
 }

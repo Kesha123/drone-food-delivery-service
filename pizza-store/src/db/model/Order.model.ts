@@ -3,12 +3,12 @@ import { Order, OrderStatus } from "../../order/entities/order.entity";
 
 
 export const OrderSchema: Schema<Order> = new Schema({
-        staus: { type: String, enum: OrderStatus, required: true },
+        status: { type: String, enum: OrderStatus, required: true },
         drone: { type: String, required: false },
         customer: { type: String, required: true },
         restaurantLocation: { type: String, required: true },
         customerLocation: { type: String, required: true },
-        foodOrder: { type: String, required: true },
+        foodOrder: { type: [String], required: true },
     },
     {
         timestamps: true

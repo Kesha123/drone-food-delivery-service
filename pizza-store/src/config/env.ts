@@ -14,6 +14,7 @@ type IEnvironment = {
   JWT_ALGORITHM: string;
   BCRYPT_SALT: string;
   FLEET_SERVICE: string;
+  RESTAURANT_ENDPOINT: string;
 };
 
 export const env: IEnvironment = {
@@ -29,4 +30,5 @@ export const env: IEnvironment = {
   JWT_ALGORITHM: <string>process.env.JWT_ALGORITHM,
   BCRYPT_SALT: <string>process.env.BCRYPT_SALT,
   FLEET_SERVICE: <string>process.env.FLEET_SERVICE,
+  RESTAURANT_ENDPOINT: <string>process.env.RESTAURANT_ENDPOINT,
 };
