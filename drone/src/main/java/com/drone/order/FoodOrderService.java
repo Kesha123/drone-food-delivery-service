@@ -32,6 +32,7 @@ public class FoodOrderService {
         }
     }
 
+    /*
     public void startDelivery() {
         if (!jobStarted) {
             scheduler.schedule(this::runTask, 5, TimeUnit.SECONDS);
@@ -46,4 +47,6 @@ public class FoodOrderService {
         droneService.setFoodOrder(null);
         scheduler.shutdown();
     }
+
+     */
 }

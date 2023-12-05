@@ -9,4 +9,7 @@ export class CreateUserDto implements Omit<User, '_id'> {
     @IsNotEmpty()
     password: string;
 
+    @IsNotEmpty()
+    location: string;
+
 }

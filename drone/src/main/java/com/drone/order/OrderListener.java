@@ -13,8 +13,6 @@ import java.util.Objects;
 
 @Service
 public class OrderListener {
-    @Autowired
-    Environment environment;
 
     @Autowired
     FoodOrderService foodOrderService;

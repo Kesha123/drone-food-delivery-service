@@ -25,37 +25,90 @@ services:
       RABBITMQ_DEFAULT_USER: root
       RABBITMQ_DEFAULT_PASS: root
 
-  pizzeria-web-client:
-    build:
-      context: ./pizzeria-web-client
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    container_name:  pizzeria_web_client
-
-  operating-web-client:
-    build:
-      context: ./operating-web-client
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3000"
-    container_name:  operating_web_client
-
   pizza-store:
-    image: node:latest
+    build:
+      context: pizza-store
+      dockerfile: Dockerfile
     container_name:  pizza_store
+    depends_on:
+      - mongo
+    ports:
+      - "9100:9100"
+    restart: always
+    environment:
+      MONGO_CONNECTION_STRING: mongodb://root:root@mongo:27017/?authMechanism=DEFAULT&authSource=admin
+      BACKEND_PORT: 9100
+      APP_NAME: Pizza Store
+      NODE_ENV: dev
+      MONGO_PASSWORD: root
+      MONGO_USER: root
+      BCRYPT_SALT: 10
+      JWT_ALGORITHM: RS256
+      FLEET_SERVICE: http://fleet:8080/dronora
+    env_file:
+      - pizza-store.env
 
   fleet:
-    image: node:latest
-    container_name:  fleet_server
+    build:
+      context: fleet-service
+      dockerfile: Dockerfile
+    container_name:  fleet_service
+    hostname: fleet
+    depends_on:
+      - mongo
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      MONGODB_HOST: mongo
+      MONGODB_PORT: 27017
+      RABBITMQ_USERNAME: root
+      RABBITMQ_PASSWORD: root
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: root
+      MONGODB_DATABASE: dronora
 
   drone-1:
-    image: node:latest
+    image: drone
+    build:
+      context: drone
+      dockerfile: Dockerfile
     container_name:  drone_1
+    hostname: drone-1
+    depends_on:
+      - fleet
+      - rabbitmq
+    ports:
+      - "8081:8081"
+    restart: always
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      FLEET_HOST: fleet
+      FLEET_PORT: 8080
+      RABBITMQ_USERNAME: root
+      RABBITMQ_PASSWORD: root
 
   drone-2:
-    image: node:latest
-    container_name:  drone_2
+    image: drone
+    container_name: drone_2
+    hostname: drone-2
+    depends_on:
+      - fleet
+      - rabbitmq
+      - drone-1
+    ports:
+      - "8082:8081"
+    restart: always
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      FLEET_HOST: fleet
+      FLEET_PORT: 8080
+      RABBITMQ_USERNAME: root
+      RABBITMQ_PASSWORD: root
 
 volumes:
   mongo-data:

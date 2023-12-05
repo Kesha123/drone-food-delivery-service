@@ -8,10 +8,8 @@ export const OrderSchema: Schema<Order> = new Schema({
         customer: { type: String, required: true },
         restaurantLocation: { type: String, required: true },
         customerLocation: { type: String, required: true },
+        createdAt: { type: String, required: true },
         foodOrder: { type: [String], required: true },
-    },
-    {
-        timestamps: true
     }
 )
 

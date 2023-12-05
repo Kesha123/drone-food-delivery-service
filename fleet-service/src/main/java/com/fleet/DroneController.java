@@ -22,6 +22,9 @@ public class DroneController {
     @Autowired
     FoodOrderRepository foodOrderRepository;
 
+    @Autowired
+    FoodOrderService foodOrderService;
+
 
     @Autowired
     private ProducerTemplate producerTemplate;
@@ -53,9 +56,6 @@ public class DroneController {
         Optional<Drone> droneData = droneRepository.findById(droneId);
         if (droneData.isPresent()) {
             Drone drone = droneData.get();
-            if (!drone.isAvailable() & data.isAvailable()) {
-
-            }
             drone.setNickname(data.getNickname() != null ? data.getNickname() : drone.getNickname());
             drone.setHost(data.getHost() != null ? data.getHost() : drone.getHost());
             drone.setChargeLevel(data.getChargeLevel());

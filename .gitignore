@@ -33,6 +33,6 @@ build/
 .vscode/
 
 
-.env
+*.env
 mongo-data/
 node_modules/

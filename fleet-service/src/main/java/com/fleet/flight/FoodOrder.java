@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-@Document
+@Document("orders")
 public class FoodOrder {
     @Id
     private String id;
@@ -22,7 +22,6 @@ public class FoodOrder {
     @CreatedDate
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createdAt;
-
 
     public FoodOrder(String restaurantLocation, String customerLocation, String[] foodOrder) throws Exception {
         this.drone = null;
@@ -94,5 +93,6 @@ public class FoodOrder {
                 "\"createdAt\":\"" + createdAt + "\"" +
                 "}";
     }
+
 
 }

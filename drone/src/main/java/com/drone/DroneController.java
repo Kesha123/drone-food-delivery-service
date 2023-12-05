@@ -41,7 +41,6 @@ public class DroneController {
             FoodOrder order = droneService.getFoodOrder();
             order.setStatus(OrderStatus.DELIVERING);
             droneService.setFoodOrder(order);
-            foodOrderService.startDelivery();
         } catch (Exception e) {
             e.printStackTrace();
         }

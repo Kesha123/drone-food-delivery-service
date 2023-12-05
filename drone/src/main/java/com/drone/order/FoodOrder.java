@@ -2,6 +2,7 @@ package com.drone.order;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 public class FoodOrder {
 
@@ -11,16 +12,16 @@ public class FoodOrder {
     private String restaurantLocation;
     private String customerLocation;
 
-    private String[] foodOrder;
+    //private List<String> foodOrder;
 
     private LocalDateTime createdAt;
 
 
-    public FoodOrder(String restaurantLocation, String customerLocation, String[] foodOrder) throws Exception {
+    public FoodOrder(String restaurantLocation, String customerLocation) throws Exception {
         this.drone = null;
         this.restaurantLocation = restaurantLocation;
         this.customerLocation = customerLocation;
-        this.foodOrder = foodOrder;
+        // this.foodOrder = foodOrder;
     }
 
     public String getId() {
@@ -62,13 +63,15 @@ public class FoodOrder {
         this.customerLocation = customerLocation;
     }
 
-    public String[] getFoodOrder() {
+    /*
+    public List<String> getFoodOrder() {
         return foodOrder;
     }
 
-    public void setFoodOrder(String[] foodOrder) {
+    public void setFoodOrder(List<String> foodOrder) {
         this.foodOrder = foodOrder;
     }
+    */
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -82,7 +85,7 @@ public class FoodOrder {
                 "\"drone\":\"" + drone + "\"," +
                 "\"restaurantLocation\":\"" + restaurantLocation + "\"," +
                 "\"customerLocation\":\"" + customerLocation + "\"," +
-                "\"foodOrder\":\"" + Arrays.toString(foodOrder) + "\"," +
+                // "\"foodOrder\":\"" + foodOrder + "\"," +
                 "\"createdAt\":\"" + createdAt + "\"" +
                 "}";
     }

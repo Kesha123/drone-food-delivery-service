@@ -16,7 +16,7 @@ import { OrderController } from './order/order.controller';
     MongooseModule.forRoot(
       env.MONGO_CONNECTION_STRING,
       {
-        dbName: "pizza-store"
+        dbName: "dronora",
       }
     ),
     AuthModule,

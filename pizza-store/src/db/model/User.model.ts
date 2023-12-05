@@ -1,5 +1,6 @@
 import { Model, Schema, model } from "mongoose";
 import { User } from "../../user/entities/user.entity";
+import { Injectable } from "@nestjs/common";
 
 export const UserSchema: Schema<User> = new Schema({
     email: { type: String, required: true, unique: true, index: true },

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.github/
+scripts/
+test/
+nginx/
+docker-compose.yml
+Dockerfile
+README.md
+.git/
+.gitignore
+.dockerignore

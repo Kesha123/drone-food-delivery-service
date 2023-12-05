@@ -13,10 +13,18 @@ export const applicationLogger = (): Logger => {
     ),
     defaultMeta: { service: env.APP_NAME },
     transports: [
-      new winston.transports.MongoDB({
-        level: 'info',
-        db: env.MONGO_CONNECTION_STRING,
+      // new winston.transports.MongoDB({
+      //   level: 'info',
+      //   db: env.MONGO_CONNECTION_STRING,
+      // }),
+      new winston.transports.File({
+        filename: 'combined.log',
+        level: 'info'
       }),
+      new winston.transports.File({
+        filename: 'errors.log',
+        level: 'error'
+      })
     ],
   });
 

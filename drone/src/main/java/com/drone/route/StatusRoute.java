@@ -7,6 +7,7 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.http.HttpMethods;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,6 +15,12 @@ public class StatusRoute extends RouteBuilder {
 
     @Autowired
     private DroneService droneService;
+
+    @Value("${fleet.host}")
+    private String fleetHost;
+
+    @Value("${fleet.port}")
+    private String fleetPort;
 
     @Override
     public void configure() throws Exception {
@@ -29,7 +36,7 @@ public class StatusRoute extends RouteBuilder {
                 .when(simple("${body.id} != null"))
                 .process(exchange -> {
                     Drone drone = exchange.getIn().getBody(Drone.class);
-                    String endpointUrl = String.format("http://localhost:8080/dronora/drones/%s", drone.getId());
+                    String endpointUrl = String.format("http://%s:%s/dronora/drones/%s", fleetHost, fleetPort, drone.getId());
                     exchange.getIn().setHeader(Exchange.HTTP_URI, endpointUrl);
                 })
                 .marshal().json()
