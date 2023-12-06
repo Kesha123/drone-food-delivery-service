@@ -2,6 +2,7 @@ package com.fleet;
 
 import com.fleet.drone.Drone;
 import com.fleet.drone.DroneRepository;
+import com.fleet.flight.FoodOrder;
 import com.fleet.flight.FoodOrderRepository;
 import com.fleet.flight.FoodOrderService;
 import org.apache.camel.ProducerTemplate;
@@ -10,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("dronora")
 public class DroneController {
@@ -29,6 +32,16 @@ public class DroneController {
     @Autowired
     private ProducerTemplate producerTemplate;
 
+    @GetMapping("/drones/all")
+    public ResponseEntity<List<Drone>> allDrones() {
+        try {
+            List<Drone> drones = droneRepository.findAll();
+            return new ResponseEntity<>(drones, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping("/drones")
     public ResponseEntity<Drone> createDrone(@RequestBody Drone data) {

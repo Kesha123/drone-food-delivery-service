@@ -36,3 +36,4 @@ build/
 *.env
 mongo-data/
 node_modules/
+*odt*

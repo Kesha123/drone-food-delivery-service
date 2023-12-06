@@ -110,5 +110,28 @@ services:
       RABBITMQ_USERNAME: root
       RABBITMQ_PASSWORD: root
 
+  pizzeria-web-client:
+    build:
+      context: pizzeria-web-client
+      dockerfile: Dockerfile
+    container_name: pizzeria-web-client
+    depends_on:
+      - pizza-store
+      - fleet
+    environment:
+      REACT_APP_FLEET_SERVICE: http://fleet:8080/dronora
+    ports:
+      - "3000:3000"
+
+  operating-web-client:
+    build:
+      context: operating-web-client
+      dockerfile: Dockerfile
+    container_name: operating-web-client
+    depends_on:
+      - fleet
+    ports:
+      - "3001:3000"
+
 volumes:
   mongo-data:

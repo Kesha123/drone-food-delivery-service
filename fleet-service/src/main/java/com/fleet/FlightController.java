@@ -18,8 +18,10 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessageProperties;
 
+import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("dronora")
 public class FlightController {
@@ -32,6 +34,17 @@ public class FlightController {
 
     @Autowired
     private ProducerTemplate producerTemplate;
+
+    @GetMapping("/flights/all")
+    public ResponseEntity<List<FoodOrder>> allOrders() {
+        try {
+            List<FoodOrder> orders = foodOrderRepository.findAll();
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PostMapping("/flights")
     public ResponseEntity<FoodOrder> createFoodOrder(@RequestBody FoodOrder data) {
