@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
 
-export interface User {
+export class User {
     _id?: string
     email: string
     location?: string

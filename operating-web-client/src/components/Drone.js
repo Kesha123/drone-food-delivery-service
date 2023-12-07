@@ -10,7 +10,6 @@ export const DroneList = () => {
     useEffect(() => {
         async function fetchData() {
             const data = await fetchDrones();
-
             setDroneList(data);
         }
         fetchData();

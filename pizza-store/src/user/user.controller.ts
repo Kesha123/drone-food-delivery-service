@@ -9,7 +9,6 @@ import { SerializedUser, User } from './entities/user.entity';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @UsePipes(ValidationPipe)
   @Post('/create')
   async createProfile(@Body() createUserDto: CreateUserDto): Promise<User | undefined> {

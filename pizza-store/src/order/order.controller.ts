@@ -12,7 +12,7 @@ export class OrderController {
         private readonly orderService: OrderService
     ) {}
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Post('/create')
     async createOrder (
         @Body() createOrderDto: CreateOrderDto,
