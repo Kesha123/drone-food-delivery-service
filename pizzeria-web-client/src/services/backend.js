@@ -1,5 +1,6 @@
 
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+// const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+const BASE_URL = "http://localhost:9100/api";
 
 export const fetchMenu = async () => {
     try {

@@ -46,7 +46,6 @@ function App() {
                 orderSwitch={orderSwitch}/>
         }/>
         <Route path="orders" element={<OrderList />} />
-        <Route path="/" element={<Menu />} />
       </Route>
     </Routes>
   </BrowserRouter>
