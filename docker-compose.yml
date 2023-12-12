@@ -119,7 +119,7 @@ services:
       - pizza-store
       - fleet
     environment:
-      REACT_APP_FLEET_SERVICE: http://fleet:8080/dronora
+      REACT_APP_BACKEND_URL: http://pizza-store:9100/api
     ports:
       - "3000:3000"
 
@@ -132,6 +132,8 @@ services:
       - fleet
     ports:
       - "3001:3000"
+    environment:
+      REACT_APP_FLEET_SERVICE: http://fleet:8080/dronora
 
 volumes:
   mongo-data:
