@@ -1,5 +1,6 @@
 
-const BASE_URL = process.env.REACT_APP_FLEET_SERVICE;
+// const BASE_URL = process.env.REACT_APP_FLEET_SERVICE;
+const BASE_URL = "http://localhost:8080/dronora";
 
 export const registerDroneFleet = async (nickname, capacity, host, location) => {
     try {
